@@ -1,6 +1,6 @@
-# Documentation Technique
+# Documentation technique
 
-## Projet d'Analyse de Données Hospitalières
+## Projet d'analyse de données hospitalières
 
 ---
 
@@ -14,7 +14,7 @@
 
 ---
 
-## Table des Matières
+## Table des matières
 
 1. [Introduction et Contexte](#1-introduction-et-contexte)
 2. [Architecture du Projet](#2-architecture-du-projet)
@@ -26,9 +26,9 @@
 
 ---
 
-## 1. Introduction et Contexte
+## 1. Introduction et contexte
 
-### 1.1 Problématique Médicale
+### 1.1 Problématique médicale
 
 Dans le contexte hospitalier, deux enjeux majeurs se posent quotidiennement :
 
@@ -38,11 +38,11 @@ Dans le contexte hospitalier, deux enjeux majeurs se posent quotidiennement :
 
 Ces deux problématiques ont un impact direct sur la qualité des soins et l'efficience opérationnelle des établissements de santé. Une détection trop tardive d'une détérioration peut engager le pronostic vital du patient ; une mauvaise estimation de la durée de séjour génère des tensions sur la disponibilité des lits.
 
-### 1.2 Objectifs du Projet
+### 1.2 Objectifs du projet
 
 Ce projet vise à répondre à ces deux problématiques en développant des **modèles prédictifs** basés sur les données de monitoring hospitalier continu :
 
-| Objectif                   | Type de Problème       | Algorithme Retenu     | Cible              |
+| Objectif                   | Type de problème       | Algorithme retenu     | Cible              |
 | -------------------------- | ---------------------- | --------------------- | ------------------ |
 | Prédire une détérioration  | Classification binaire | Régression Logistique | `deterioration_event` |
 | Estimer la durée de séjour | Régression             | Régression Linéaire   | `los_hours`        |
@@ -60,9 +60,9 @@ Chaque modèle est conçu comme un **outil d'aide à la décision** : il vient e
 
 ---
 
-## 2. Architecture du Projet
+## 2. Architecture du projet
 
-### 2.1 Vue d'Ensemble
+### 2.1 Vue d'ensemble
 
 Le projet se déroule en deux grands pipelines distincts :
 
@@ -73,7 +73,7 @@ Ces deux pipelines sont indépendants et peuvent être exécutés séparément. 
 
 ---
 
-### 2.2 Schéma 1 — Pipeline de Données
+### 2.2 Schéma 1 — Pipeline de données
 
 Ce premier schéma illustre le cheminement des données brutes jusqu'à la production des rapports d'exploration et des visualisations. Le script `datacard.py` orchestre l'ensemble de cette chaîne.
 
@@ -111,7 +111,7 @@ flowchart LR
 
 ---
 
-### 2.3 Schéma 2 — Pipeline de Modélisation
+### 2.3 Schéma 2 — Pipeline de modélisation
 
 Ce second schéma décrit le chemin des données depuis le prétraitement jusqu'à la production des modèles et de leur documentation. Le script `modelcard.py` orchestre ce pipeline.
 
@@ -158,7 +158,7 @@ flowchart TB
 
 ---
 
-### 2.4 Structure des Fichiers
+### 2.4 Structure des fichiers
 
 ```
 dourneau-marty_docml/
@@ -203,7 +203,7 @@ dourneau-marty_docml/
     └── model_regression.joblib       # Modèle de régression sérialisé
 ```
 
-### 2.5 Technologies Utilisées
+### 2.5 Technologies utilisées
 
 | Catégorie     | Technologie  | Version | Rôle dans le projet                      |
 | ------------- | ------------ | ------- | ---------------------------------------- |
@@ -217,9 +217,9 @@ dourneau-marty_docml/
 
 ---
 
-## 3. Les Données
+## 3. Les données
 
-### 3.1 Source et Description
+### 3.1 Source et description
 
 Le dataset `hospital_deterioration_hourly_panel.csv` contient des mesures **horaires** collectées en continu auprès de patients hospitalisés. Chaque ligne représente l'état clinique d'un patient à une heure donnée depuis son admission.
 
@@ -232,7 +232,7 @@ Le dataset `hospital_deterioration_hourly_panel.csv` contient des mesures **hora
 | **Doublons**             | 0                                          |
 | **Taille sur disque**    | ~50 Mo (brut)                              |
 
-### 3.2 Dictionnaire des Variables
+### 3.2 Dictionnaire des variables
 
 Les 28 variables se répartissent en cinq catégories :
 
@@ -289,9 +289,9 @@ Les 28 variables se répartissent en cinq catégories :
 | `deterioration_next_12h`                    | int64 | Détérioration dans les 12 h suivantes (0/1)       |
 | `deterioration_hour`                        | int64 | Heure de l'événement (–1 si aucun) — **exclue car fuite d'information** |
 
-### 3.3 Qualité des Données
+### 3.3 Qualité des données
 
-#### Valeurs Manquantes
+#### Valeurs manquantes
 
 ! Aucune donnnées manquantes !
 
@@ -299,13 +299,13 @@ Les 28 variables se répartissent en cinq catégories :
 
 **Traitement retenu** : Imputation par la **moyenne** pour les variables numériques et par le **mode** pour les variables catégorielles. Cette approche conserve l'ensemble des observations sans introduire de biais majeur sur des distributions relativement symétriques.
 
-#### Répartition des Classes Cibles
+#### Répartition des classes cibles
 
 ![Distribution des Cibles](../figures/distribution_cibles.png)
 
 **Interprétation** : La classe "Détérioration" représente environ **21 %** des observations. Ce déséquilibre est naturel dans un contexte clinique (la majorité des patients restent stables). Il a néanmoins un impact direct sur l'entraînement du modèle de classification : sans correction, le modèle tendrait à prédire systématiquement "Stable" pour maximiser l'accuracy. Le paramètre `class_weight='balanced'` permet de corriger ce biais (voir section 4.1).
 
-### 3.4 Transformations Appliquées
+### 3.4 Transformations appliquées
 
 Le dataset brut a subi quatre étapes de prétraitement séquentielles :
 
@@ -316,31 +316,31 @@ Le dataset brut a subi quatre étapes de prétraitement séquentielles :
 | **3. Normalisation** | `StandardScaler` (μ = 0, σ = 1) | La régression logistique est sensible à l'échelle des variables ; la normalisation assure que chaque feature contribue équitablement |
 | **4. Sélection** | 22 features retenues sur 28 | Exclusion de `patient_id` (identifiant sans valeur prédictive) et des variables cibles pour éviter toute fuite d'information |
 
-### 3.5 Exploration Statistique
+### 3.5 Exploration statistique
 
-#### Distribution des Signes Vitaux
+#### Distribution des signes vitaux
 
 ![Distributions Signes Vitaux](../figures/distributions_signes_vitaux.png)
 
 **Interprétation** : Les signes vitaux présentent globalement des distributions proches de la normale. La fréquence cardiaque (`heart_rate`) montre un étalement vers les valeurs élevées (queue droite), indiquant la présence de patients en tachycardie. La saturation en oxygène (`spo2_pct`) est légèrement asymétrique vers les valeurs basses, reflétant les patients sous ventilation ou en hypoxie.
 
-#### Distribution des Analyses Biologiques
+#### Distribution des Aanalyses biologiques
 
 ![Distributions Analyses Labo](../figures/distributions_analyses_labo.png)
 
 **Interprétation** : Les marqueurs biologiques comme le `lactate` et la `crp_level` présentent des distributions fortement asymétriques à droite, avec des valeurs extrêmes élevées. Ces valeurs extrêmes correspondent à des patients en état critique et sont cliniquement pertinentes : elles ne doivent pas être supprimées.
 
-#### Détection des Outliers
+#### Détection des outliers
 
 ![Boxplots Outliers](../figures/boxplots_outliers.png)
 
 **Interprétation** : Les boîtes à moustaches révèlent de nombreuses valeurs atypiques, en particulier sur `oxygen_flow`, `lactate` et `crp_level`. Ces outliers ne sont pas des erreurs de mesure mais des cas cliniques réels (patients critiques). Ils ont été conservés dans le jeu de données.
 
-### 3.6 Analyse des Corrélations
+### 3.6 Analyse des corrélations
 
-#### Matrice de Corrélation Complète
+#### Matrice de corrélation complète
 
-![Matrice de Corrélation](../figures/heatmap_correlation.png)
+![Matrice de corrélation](../figures/heatmap_correlation.png)
 
 **Comment lire ce graphe** :
 - **Rouge intense** → Corrélation positive forte (quand l'une monte, l'autre monte)
@@ -349,17 +349,17 @@ Le dataset brut a subi quatre étapes de prétraitement séquentielles :
 
 **Interprétation** : La matrice révèle que `deterioration_event` est fortement corrélé avec `lactate` (+0.59), `spo2_pct` (–0.56), `creatinine` (+0.53) et `crp_level` (+0.52). Ces variables biologiques sont donc des prédicteurs naturels de la détérioration. La forte corrélation entre `deterioration_event` et `deterioration_hour` (+0.87) confirme que cette dernière variable contient une fuite d'information : elle est exclue de l'entraînement.
 
-#### Corrélations Annotées (Variables Clés)
+#### Corrélations annotées variables clés)
 
-![Corrélations Annotées](../figures/heatmap_correlation_annotated.png)
+![Corrélations annotées](../figures/heatmap_correlation_annotated.png)
 
 **Interprétation** : Ce zoom sur les variables les plus pertinentes confirme les groupes de variables liées : les marqueurs d'infection (`lactate`, `crp_level`, `wbc_count`) sont inter-corrélés entre eux, tout comme les variables hémodynamiques (`systolic_bp`, `diastolic_bp`, `heart_rate`). Cette collinéarité partielle est gérée par la régularisation L2 de la régression logistique.
 
 ---
 
-## 4. Les Modèles
+## 4. Les modèles
 
-### 4.1 Modèle de Classification — Détection de Détérioration
+### 4.1 Modèle de classification — détection de détérioration
 
 #### Objectif
 
@@ -373,7 +373,7 @@ Prédire si un patient va subir un événement de détérioration dans les heure
 
 La régression logistique a été choisie comme modèle de référence (*baseline*) pour les raisons suivantes :
 
-| Critère | Avantage de la Régression Logistique |
+| Critère | Avantage de la régression logistique |
 | ------- | ------------------------------------ |
 | **Interprétabilité** | Les coefficients s'interprètent directement comme des log-odds — compréhensible par les cliniciens |
 | **Robustesse** | Peu sensible au surapprentissage sur de grands jeux de données (417 k obs.) |
@@ -389,7 +389,7 @@ La régression logistique a été choisie comme modèle de référence (*baselin
 - Ne capture pas les relations non-linéaires ni les interactions complexes entre variables
 - Hypothèse de séparabilité linéaire rarement vérifiée en médecine
 
-#### Hyperparamètres et Justification
+#### Hyperparamètres et justification
 
 | Paramètre      | Valeur     | Justification                                                                 |
 | -------------- | ---------- | ----------------------------------------------------------------------------- |
@@ -399,7 +399,7 @@ La régression logistique a été choisie comme modèle de référence (*baselin
 | `class_weight` | `balanced` | Corrige le déséquilibre 79 % / 21 % en pondérant automatiquement les classes  |
 | `random_state` | 42         | Assure la reproductibilité des résultats                                      |
 
-#### Données d'Entraînement
+#### Données d'entraînement
 
 | Partition    | Observations | Proportion |
 | ------------ | ------------ | ---------- |
@@ -418,7 +418,7 @@ La régression logistique a été choisie comme modèle de référence (*baselin
 | **Rappel (Détérioration)**        | 72 %    |
 | **F1-Score (Détérioration)**      | 0.64    |
 
-**Rapport de Classification Complet**
+**Rapport de classification complet**
 
 ```
               precision    recall  f1-score   support
@@ -431,9 +431,9 @@ La régression logistique a été choisie comme modèle de référence (*baselin
 weighted avg       0.85      0.83      0.84     83 574
 ```
 
-#### Matrice de Confusion
+#### Matrice de confusion
 
-![Matrice de Confusion](../figures/confusion_matrix.png)
+![Matrice de confusion](../figures/confusion_matrix.png)
 
 | Quadrant                | Valeur  | Interprétation                                                  |
 | ----------------------- | ------- | --------------------------------------------------------------- |
@@ -442,7 +442,7 @@ weighted avg       0.85      0.83      0.84     83 574
 | **Faux Positifs (FP)**  | 9 343   | Fausses alertes → surcharge potentielle du personnel            |
 | **Faux Négatifs (FN)**  | 4 913   | ⚠️ Détériorations manquées → risque clinique majeur             |
 
-> **Point Critique** : En médecine, un **Faux Négatif** est plus grave qu'un Faux Positif. Manquer une détérioration peut engager le pronostic vital. Le paramètre `class_weight='balanced'` et un seuil de décision abaissé à 0.3 permettent de réduire ce risque au prix d'un légère augmentation des fausses alertes.
+> **Point critique** : En médecine, un **Faux Négatif** est plus grave qu'un Faux Positif. Manquer une détérioration peut engager le pronostic vital. Le paramètre `class_weight='balanced'` et un seuil de décision abaissé à 0.3 permettent de réduire ce risque au prix d'un légère augmentation des fausses alertes.
 
 #### Courbe ROC
 
@@ -450,9 +450,9 @@ weighted avg       0.85      0.83      0.84     83 574
 
 **Interprétation** : L'AUC de **0.877** signifie que le modèle, présenté aléatoirement un patient stable et un patient en détérioration, le classe correctement dans 87.7 % des cas. Une AUC de 0.5 correspond à un classifieur aléatoire ; au-delà de 0.80, la capacité discriminante est considérée comme bonne. La courbe s'éloigne nettement de la diagonale, ce qui confirme la valeur prédictive du modèle.
 
-#### Importance des Variables
+#### Importance des variables
 
-![Feature Importance](../figures/feature_importance.png)
+![Feature importance](../figures/feature_importance.png)
 
 **Top 5 variables prédictives** :
 
@@ -468,17 +468,17 @@ Ces résultats sont cohérents avec la littérature médicale : `lactate` et `sp
 
 ---
 
-### 4.2 Modèle de Régression — Estimation de la Durée de Séjour
+### 4.2 Modèle de régression — Estimation de la durée de séjour
 
 #### Objectif
 
 Estimer la durée totale d'hospitalisation (`los_hours`) en heures, à partir de l'état clinique actuel du patient, pour permettre une meilleure planification des sorties et de l'occupation des lits.
 
-#### Algorithme Retenu : Régression Linéaire Multiple
+#### Algorithme retenu : Régression linéaire multiple
 
 **Pourquoi ce choix ?**
 
-| Critère | Avantage de la Régression Linéaire |
+| Critère | Avantage de la régression linéaire |
 | ------- | ---------------------------------- |
 | **Interprétabilité** | Chaque coefficient exprime directement l'effet d'une variable sur la durée de séjour |
 | **Simplicité** | Pas d'hyperparamètres à régler — facile à reproduire et à auditer |
@@ -502,7 +502,7 @@ Estimer la durée totale d'hospitalisation (`los_hours`) en heures, à partir de
 | **Régularisation** | Aucune                     | Le jeu de données est large (417 k obs.) — le surapprentissage est peu probable |
 | **Intercept**      | 49.19 heures               | Durée de séjour prédite pour un patient "moyen"   |
 
-#### Données d'Entraînement
+#### Données d'entraînement
 
 | Partition     | Observations | Durée moyenne | Écart-type |
 | ------------- | ------------ | ------------- | ---------- |
@@ -519,23 +519,23 @@ Estimer la durée totale d'hospitalisation (`los_hours`) en heures, à partir de
 
 Un R² de 0.23 est modeste mais attendu : la durée de séjour dépend de nombreux facteurs non capturés (décisions médicales, disponibilité des lits, contexte social du patient). Ce score est typique des premières approches sur des données médicales complexes.
 
-#### Prédictions vs Valeurs Réelles
+#### Prédictions vs Valeurs réelles
 
 ![Prédictions vs Réalité](../figures/predictions_vs_reality.png)
 
 **Interprétation** : Le nuage de points montre que les prédictions se concentrent dans une bande étroite autour de 49 heures (l'intercept du modèle), alors que les valeurs réelles s'étendent de 12 à 72 heures. Le modèle linéaire manque de puissance pour capturer les cas extrêmes : il sous-estime les séjours très longs et surestime les séjours très courts. Ce comportement est caractéristique d'un modèle linéaire à faible R².
 
-#### Analyse des Résidus
+#### Analyse des résidus
 
-![Analyse des Résidus](../figures/residuals_analysis.png)
+![Analyse des résidus](../figures/residuals_analysis.png)
 
 **Interprétation** :
 - La distribution des résidus est **centrée autour de zéro** — le modèle n'est pas systématiquement biaisé dans un sens.
 - Les résidus forment un motif en "éventail", caractéristique d'une légère **hétéroscédasticité** : les erreurs sont plus grandes pour les durées de séjour extrêmes. Un modèle non-linéaire (Random Forest, XGBoost) réduirait ce phénomène.
 
-#### Coefficients du Modèle
+#### Coefficients du modèle
 
-![Coefficients de Régression](../figures/regression_coefficients.png)
+![Coefficients de régression](../figures/regression_coefficients.png)
 
 **Top 5 variables influentes** :
 
@@ -551,7 +551,7 @@ Un R² de 0.23 est modeste mais attendu : la durée de séjour dépend de nombre
 
 ---
 
-## 5. Guide d'Utilisation
+## 5. Guide d'utilisation
 
 ### 5.1 Prérequis
 
@@ -584,7 +584,7 @@ scikit-learn>=1.3
 joblib>=1.3
 ```
 
-### 5.3 Exécution des Scripts
+### 5.3 Exécution des scripts
 
 #### Option A — Tout générer en une seule commande
 
@@ -614,7 +614,7 @@ python scripts/technicalcard.py
 
 > ⚠️ **Configuration** : Les scripts contiennent des chemins configurables en tête de fichier (`INPUT_FILE`, `OUTPUT_DIR`). Adaptez-les à votre structure locale si nécessaire.
 
-### 5.4 Utiliser les Modèles Entraînés
+### 5.4 Utiliser les modèles entraînés
 
 ```python
 import joblib
@@ -647,11 +647,11 @@ alerte = (proba_deterioration >= SEUIL_ALERTE).astype(int)
 
 ---
 
-## 6. Conclusion et Perspectives
+## 6. Conclusion et perspectives
 
-### 6.1 Bilan des Modèles
+### 6.1 Bilan des modèles
 
-| Critère               | Classification (Détérioration)            | Régression (Durée de séjour)              |
+| Critère               | Classification (détérioration)            | Régression (durée de séjour)              |
 | --------------------- | ----------------------------------------- | ----------------------------------------- |
 | **Algorithme**        | Régression Logistique                     | Régression Linéaire Multiple              |
 | **Performance clé**   | AUC-ROC = 0.877 — bonne discrimination   | R² = 0.23 — explication partielle         |
@@ -674,7 +674,7 @@ Le modèle de régression, avec un R² de 0.23, donne une estimation utile de la
 | **Fuite d'information** | `deterioration_hour` exclue manuellement | Une fuite non détectée pourrait gonfler artificiellement les performances |
 | **Biais de mesure** | Valeurs manquantes imputées par la moyenne | Peut atténuer les signaux cliniques sur les variables biologiques |
 
-### 6.3 Perspectives d'Évolution
+### 6.3 Perspectives d'évolution
 
 **À court terme :**
 - **Ajuster le seuil de décision** du modèle de classification de 0.5 à 0.3–0.35 pour réduire les Faux Négatifs, priorité médicale absolue.
@@ -715,7 +715,7 @@ Le modèle de régression, avec un R² de 0.23, donne une estimation utile de la
 | **SpO2**           | Saturation pulsée en oxygène — mesurée par oxymètre de pouls                      |
 | **StandardScaler** | Normalise une variable pour qu'elle ait moyenne = 0 et écart-type = 1             |
 
-### 7.2 Documents Associés
+### 7.2 Documents associés
 
 | Document                        | Description                                       |
 | ------------------------------- | ------------------------------------------------- |
