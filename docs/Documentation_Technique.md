@@ -733,5 +733,3 @@ Le modèle de régression, avec un R² de 0.23, donne une estimation utile de la
 - Charlson, M.E. et al. (1987). *A new method of classifying prognostic comorbidity.* Journal of Chronic Diseases, 40(5), 373–383.
 
 ---
-
-*Document généré par `scripts/technicalcard.py` — Version 3.0 — Février 2026*
