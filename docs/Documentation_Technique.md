@@ -293,7 +293,7 @@ Les 28 variables se répartissent en cinq catégories :
 
 #### Valeurs Manquantes
 
-![Valeurs Manquantes](../figures/valeurs_manquantes.png)
+! Aucune donnnées manquantes !
 
 **Interprétation** : Les variables biologiques (`lactate`, `creatinine`, `crp_level`, `wbc_count`, `hemoglobin`) présentent des taux de valeurs manquantes significatifs. Cela est attendu : les prises de sang ne sont pas réalisées toutes les heures, contrairement aux signes vitaux. Ces lacunes reflètent la réalité clinique et non un défaut de collecte.
 
