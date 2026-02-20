@@ -16,12 +16,12 @@
 
 ## Table des matières
 
-1. [Introduction et Contexte](#1-introduction-et-contexte)
-2. [Architecture du Projet](#2-architecture-du-projet)
-3. [Les Données](#3-les-données)
-4. [Les Modèles](#4-les-modèles)
-5. [Guide d'Utilisation](#5-guide-dutilisation)
-6. [Conclusion et Perspectives](#6-conclusion-et-perspectives)
+1. [Introduction et contexte](#1-introduction-et-contexte)
+2. [Architecture du projet](#2-architecture-du-projet)
+3. [Les données](#3-les-données)
+4. [Les modèles](#4-les-modèles)
+5. [Guide d'utilisation](#5-guide-dutilisation)
+6. [Conclusion et perspectives](#6-conclusion-et-perspectives)
 7. [Annexes](#7-annexes)
 
 ---
