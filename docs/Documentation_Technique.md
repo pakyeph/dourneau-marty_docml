@@ -5,8 +5,11 @@
 ---
 
 **Auteurs** : Paul-Henri DOURNEAU & Dorian MARTY
+
 **Date de création** : 09/01/2026
+
 **Dernière mise à jour** : 20/02/2026
+
 **Version** : 3.0
 
 ---
